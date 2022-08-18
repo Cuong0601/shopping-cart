@@ -154,8 +154,8 @@ export default function Header() {
                             'aria-labelledby': 'basic-button',
                         }}
                     >
-                        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
                         <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>Privacy</MenuItem>
                         <MenuItem onClick={handleLogOut}>Logout</MenuItem>
                     </Menu>
                 </Toolbar>
