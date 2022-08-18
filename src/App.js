@@ -1,7 +1,7 @@
 import TodoFeature from 'features/Todo';
 import React, { useEffect } from 'react';
 import './App.css';
-import { Routes, Route, NavLink } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Song from './features/Song';
 import ListPage from './features/Todo/pages/ListPage';
 import DetailPage from './features/Todo/pages/DetailPage';
@@ -27,13 +27,6 @@ function App() {
         <div className="app">
             <Header />
 
-            <nav>
-                <NavLink to="/todos">Todo App</NavLink>
-                <br />
-                <NavLink to="/song">Song</NavLink>
-                <br />
-                <NavLink to="/counter">Counter</NavLink>
-            </nav>
             <Routes>
                 <Route path="/" element={<Home />}></Route>
                 <Route path="/counter" element={<Counter />}></Route>

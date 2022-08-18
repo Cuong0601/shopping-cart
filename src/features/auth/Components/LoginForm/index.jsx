@@ -9,7 +9,7 @@ import { Avatar, Button, LinearProgress, Typography } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { makeStyles } from '@mui/styles';
 
-RegisterForm.propTypes = {
+LoginForm.propTypes = {
     onSubmit: PropTypes.func,
 };
 const useStyles = makeStyles({
@@ -32,43 +32,24 @@ const useStyles = makeStyles({
     },
 });
 
-function RegisterForm(props) {
+function LoginForm(props) {
     const { onSubmit } = props;
     const classes = useStyles();
     const schema = yup
         .object()
         .shape({
-            fullName: yup
+            identifier: yup
                 .string()
-                .required('Please enter your full name')
-                .test(
-                    'should has at leats two words',
-                    'Please enter at least two words',
-                    (value) => {
-                        return value.split(' ').length >= 2; // check have between words
-                    }
-                ),
-            email: yup
-                .string()
-                .required('Please enter your full name')
+                .required('Please enter your username or email')
                 .email('Please enter a valid email'),
-            password: yup
-                .string()
-                .required('Please enter password')
-                .min(6, 'Please enter at least 6 characters'),
-            retypePassword: yup
-                .string()
-                .required('Please retype your password')
-                .oneOf([yup.ref('password')], 'Password does not match'),
+            password: yup.string().required('Please enter password'),
         })
         .required();
 
     const { control, handleSubmit, formState } = useForm({
         defaultValues: {
-            fullName: '',
-            email: '',
+            identifier: '',
             password: '',
-            retypePassword: '',
         },
         resolver: yupResolver(schema),
     });
@@ -83,29 +64,23 @@ function RegisterForm(props) {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign up
+                    Sign in
                 </Typography>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
                 <InputField
-                    name="fullName"
-                    label="Full Name"
+                    name="identifier"
+                    label="Email"
                     control={control}
                     formState={formState}
                 />
-                <InputField name="email" label="Email" control={control} formState={formState} />
                 <PasswordField
                     name="password"
                     label="Password"
                     control={control}
                     formState={formState}
                 />
-                <PasswordField
-                    name="retypePassword"
-                    label="Retype Password"
-                    control={control}
-                    formState={formState}
-                />
+
                 <Button
                     disabled={isSubmitting}
                     type="submit"
@@ -113,11 +88,11 @@ function RegisterForm(props) {
                     className={classes.submit}
                     fullWidth
                 >
-                    CREATE AN ACCOUNT
+                    SIGN IN
                 </Button>
             </form>
         </div>
     );
 }
 
-export default RegisterForm;
+export default LoginForm;

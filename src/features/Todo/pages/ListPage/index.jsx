@@ -1,6 +1,6 @@
 import TodoForm from 'features/Todo/Components/TodoForm';
 import React from 'react';
-import TodoList from '../../Components/TodoList';
+import TodoList from 'features/Todo/Components/TodoList';
 
 function ListPage(props) {
     const todoList = [
