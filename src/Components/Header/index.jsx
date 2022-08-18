@@ -11,10 +11,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import Login from 'features/auth/Components/Login';
 import Register from 'features/auth/Components/Register';
-import { IconButton } from '@mui/material';
+import { IconButton, Menu, MenuItem } from '@mui/material';
 import { AccountCircle, Close } from '@material-ui/icons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
+import { logout } from 'features/auth/userSlice';
 
 const useStyles = makeStyles({
     root: {
@@ -42,6 +43,8 @@ const MODE = {
 
 export default function Header() {
     const classes = useStyles();
+    const dispatch = useDispatch();
+
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState(MODE.LOGIN);
     const loggedInUser = useSelector((state) => state.user.current);
@@ -64,6 +67,10 @@ export default function Header() {
     };
     const handleMenuClose = () => {
         setAnchorEl(null);
+    };
+    const handleLogOut = () => {
+        setAnchorEl(null);
+        dispatch(logout());
     };
 
     return (
@@ -92,7 +99,13 @@ export default function Header() {
                     )}
 
                     {isLoggedIn && (
-                        <IconButton color="inherit">
+                        <IconButton
+                            color="inherit"
+                            aria-controls={open ? 'basic-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={handleUserClick}
+                        >
                             <AccountCircle />
                         </IconButton>
                     )}
@@ -132,6 +145,19 @@ export default function Header() {
                             )}
                         </DialogContent>
                     </Dialog>
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={openMenu}
+                        onClose={handleMenuClose}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                    >
+                        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+                        <MenuItem onClick={handleLogOut}>Logout</MenuItem>
+                    </Menu>
                 </Toolbar>
             </AppBar>
         </Box>
