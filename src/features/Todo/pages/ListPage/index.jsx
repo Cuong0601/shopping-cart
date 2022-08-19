@@ -2,7 +2,7 @@ import TodoForm from 'features/Todo/Components/TodoForm';
 import React from 'react';
 import TodoList from 'features/Todo/Components/TodoList';
 
-function ListPage(props) {
+function TodoListPage(props) {
     const todoList = [
         {
             id: 1,
@@ -35,4 +35,4 @@ function ListPage(props) {
     );
 }
 
-export default ListPage;
+export default TodoListPage;
