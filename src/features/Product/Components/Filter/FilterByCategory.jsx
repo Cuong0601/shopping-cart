@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import categoryAPI from 'api/categoryAPI';
 import { makeStyles } from '@mui/styles';
 import { HOVER_COLOR } from 'constants/index';
+import ProductSkeletonCategory from '../Skeleton/ProductSkeletonCategory';
 
 FilterByCategory.propTypes = {
     onChange: PropTypes.func,
@@ -32,6 +33,7 @@ const useStyles = makeStyles({
 function FilterByCategory({ onChange }) {
     const classes = useStyles();
     const [categoryList, setCategoryList] = useState([]);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         try {
             const fetchCategory = async () => {
@@ -42,6 +44,7 @@ function FilterByCategory({ onChange }) {
                         name: x.name,
                     }))
                 );
+                setLoading(false);
             };
             fetchCategory();
         } catch (error) {
@@ -51,19 +54,24 @@ function FilterByCategory({ onChange }) {
     const handleCategoryClick = (category) => {
         if (onChange) onChange(category.id);
     };
-
     return (
-        <Box className={classes.root}>
-            <Typography variant="subtitle1" fontWeight="bold">
-                DANH MỤC SẢN PHẨM
-            </Typography>
-            <ul className={classes.menu}>
-                {categoryList.map((category) => (
-                    <li key={category.id} onClick={() => handleCategoryClick(category)}>
-                        <Typography variant="body1"> {category.name}</Typography>
-                    </li>
-                ))}
-            </ul>
+        <Box>
+            {loading ? (
+                <ProductSkeletonCategory length={6} />
+            ) : (
+                <Box className={classes.root}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                        DANH MỤC SẢN PHẨM
+                    </Typography>
+                    <ul className={classes.menu}>
+                        {categoryList.map((category) => (
+                            <li key={category.id} onClick={() => handleCategoryClick(category)}>
+                                <Typography variant="body1"> {category.name}</Typography>
+                            </li>
+                        ))}
+                    </ul>
+                </Box>
+            )}
         </Box>
     );
 }

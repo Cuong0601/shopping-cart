@@ -4,7 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Pagination, Paper } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import productAPI from 'api/productAPI';
-import ProductSkeletonList from 'features/Product/Components/ProductSkeletonList';
+import ProductSkeletonList from 'features/Product/Components/Skeleton/ProductSkeletonList';
 import ProductList from 'features/Product/Components/ProductList';
 import ProductSort from 'features/Product/Components/ProductSort';
 import ProductFilter from 'features/Product/Components/ProductFilter';
