@@ -7,6 +7,7 @@ import productAPI from 'api/productAPI';
 import ProductSkeletonList from 'features/Product/Components/ProductSkeletonList';
 import ProductList from 'features/Product/Components/ProductList';
 import ProductSort from 'features/Product/Components/ProductSort';
+import ProductFilter from 'features/Product/Components/ProductFilter';
 
 const useStyles = makeStyles({
     root: {},
@@ -57,11 +58,17 @@ function ProductListPage(props) {
         }));
     };
 
-    const handleSortChange = (e, newValue) => {
-        console.log(newValue);
+    const handleSortChange = (newValue) => {
         setFilters((prevFilter) => ({
             ...prevFilter,
             _sort: newValue,
+        }));
+    };
+
+    const handleFiltersChange = (newFilters) => {
+        setFilters((prevFilter) => ({
+            ...prevFilter,
+            ...newFilters,
         }));
     };
 
@@ -70,7 +77,9 @@ function ProductListPage(props) {
             <Container>
                 <Grid container spacing={1}>
                     <Grid className={classes.left}>
-                        <Paper elevation={0}>Left colum</Paper>
+                        <Paper elevation={0}>
+                            <ProductFilter filters={filters} onChange={handleFiltersChange} />
+                        </Paper>
                     </Grid>
                     <Grid className={classes.right}>
                         <Paper elevation={0}>

@@ -10,7 +10,7 @@ ProductSort.propTypes = {
 function ProductSort(props) {
     const { onChange, currentSort } = props;
     const handleChange = (e, value) => {
-        if (onChange) onChange(e, value);
+        if (onChange) onChange(value);
     };
     return (
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
