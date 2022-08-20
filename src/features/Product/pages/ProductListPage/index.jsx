@@ -6,6 +6,7 @@ import { makeStyles } from '@mui/styles';
 import productAPI from 'api/productAPI';
 import ProductSkeletonList from 'features/Product/Components/ProductSkeletonList';
 import ProductList from 'features/Product/Components/ProductList';
+import ProductSort from 'features/Product/Components/ProductSort';
 
 const useStyles = makeStyles({
     root: {},
@@ -29,13 +30,16 @@ function ProductListPage(props) {
         total: 12,
         limit: 12,
     });
-    const [filters, setFilters] = useState({ _page: 1, _limit: 12 });
+    const [filters, setFilters] = useState({
+        _page: 1,
+        _limit: 12,
+        _sort: 'salePrice:ASC',
+    });
 
     useEffect(() => {
         const fectProduct = async () => {
             try {
                 const { data, pagination } = await productAPI.getAll(filters);
-
                 setProductList(data);
                 setPagination(pagination);
             } catch (error) {
@@ -53,6 +57,14 @@ function ProductListPage(props) {
         }));
     };
 
+    const handleSortChange = (e, newValue) => {
+        console.log(newValue);
+        setFilters((prevFilter) => ({
+            ...prevFilter,
+            _sort: newValue,
+        }));
+    };
+
     return (
         <Box padding={1}>
             <Container>
@@ -62,6 +74,8 @@ function ProductListPage(props) {
                     </Grid>
                     <Grid className={classes.right}>
                         <Paper elevation={0}>
+                            <ProductSort currentSort={filters._sort} onChange={handleSortChange} />
+
                             {loading ? (
                                 <ProductSkeletonList length={12} />
                             ) : (
