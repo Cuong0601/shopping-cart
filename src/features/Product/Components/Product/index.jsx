@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Skeleton, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { STATIC_HOST, THUMBNAIL_PLACEHOLDER } from 'constants/index';
 
 Product.propTypes = {
@@ -16,7 +16,7 @@ function Product({ product }) {
         ? `${STATIC_HOST}${product.thumbnail.url}`
         : THUMBNAIL_PLACEHOLDER;
     return (
-        <Box padding={1}>
+        <Box padding={1} minHeight="198px">
             <Box>
                 <img src={thumbNailURL} alt={product.name} width="100%"></img>
             </Box>
