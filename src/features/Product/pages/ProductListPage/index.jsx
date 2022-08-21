@@ -8,6 +8,7 @@ import ProductSkeletonList from 'features/Product/Components/Skeleton/ProductSke
 import ProductList from 'features/Product/Components/ProductList';
 import ProductSort from 'features/Product/Components/ProductSort';
 import ProductFilter from 'features/Product/Components/ProductFilter';
+import FiltersView from 'features/Product/Components/FiltersView';
 
 const useStyles = makeStyles({
     root: {},
@@ -84,6 +85,8 @@ function ProductListPage(props) {
                     <Grid className={classes.right}>
                         <Paper elevation={0}>
                             <ProductSort currentSort={filters._sort} onChange={handleSortChange} />
+
+                            <FiltersView filters={filters} onChange={handleFiltersChange} />
 
                             {loading ? (
                                 <ProductSkeletonList length={12} />

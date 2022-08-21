@@ -16,7 +16,7 @@ function Product({ product }) {
         ? `${STATIC_HOST}${product.thumbnail.url}`
         : THUMBNAIL_PLACEHOLDER;
     return (
-        <Box padding={1} minHeight="198px">
+        <Box sx={{ px: 1, pb: 1 }} minHeight="198px">
             <Box>
                 <img src={thumbNailURL} alt={product.name} width="100%"></img>
             </Box>

@@ -34,13 +34,13 @@ function FilterByService(props) {
                 <FormGroup>
                     <FormControlLabel
                         control={<Checkbox onChange={handleChange} />}
-                        label="Có khuyến mãi"
+                        label="Khuyến mãi"
                         value="isPromotion"
                         checked={Boolean(filters.isPromotion)}
                     />
                     <FormControlLabel
                         control={<Checkbox onChange={handleChange} />}
-                        label="Miễn phí vận chuyển"
+                        label="FREESHIP"
                         value="isFreeShip"
                         checked={Boolean(filters.isFreeShip)}
                     />
