@@ -18,8 +18,8 @@ function ProductSkeletonCategory(props) {
             <Skeleton width="90%" />
             <Box sx={{ mt: '20px' }}>
                 {Array.from({ length: listLength }).map((product, index) => (
-                    <Box sx={{ my: '15px' }}>
-                        <Skeleton key={index} width="50%" />
+                    <Box sx={{ my: '15px' }} key={index}>
+                        <Skeleton width="50%" />
                     </Box>
                 ))}
             </Box>

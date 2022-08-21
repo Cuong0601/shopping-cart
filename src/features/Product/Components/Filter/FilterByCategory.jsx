@@ -5,7 +5,7 @@ import { Box } from '@mui/system';
 import { useEffect } from 'react';
 import categoryAPI from 'api/categoryAPI';
 import { makeStyles } from '@mui/styles';
-import { HOVER_COLOR } from 'constants/index';
+import { GRAY_COLOR } from 'constants/index';
 import ProductSkeletonCategory from '../Skeleton/ProductSkeletonCategory';
 
 FilterByCategory.propTypes = {
@@ -24,7 +24,7 @@ const useStyles = makeStyles({
                 transition: 'all 0.2s',
                 cursor: 'pointer',
                 color: 'darkslateblue',
-                backgroundColor: HOVER_COLOR,
+                backgroundColor: GRAY_COLOR,
             },
         },
     },
