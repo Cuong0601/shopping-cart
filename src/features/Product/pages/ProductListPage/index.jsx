@@ -78,7 +78,7 @@ function ProductListPage(props) {
                 <Grid container spacing={1}>
                     <Grid className={classes.left}>
                         <Paper elevation={0}>
-                            <ProductFilter onChange={handleFiltersChange} />
+                            <ProductFilter filters={filters} onChange={handleFiltersChange} />
                         </Paper>
                     </Grid>
                     <Grid className={classes.right}>
