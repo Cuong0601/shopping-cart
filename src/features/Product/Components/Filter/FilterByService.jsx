@@ -1,15 +1,11 @@
 import React from 'react';
 
-import PropTypes from 'prop-types';
 import { Box } from '@mui/system';
 import { Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { GRAY_COLOR } from 'constants/index';
-
-FilterByService.propTypes = {
-    filters: PropTypes.object,
-    onChange: PropTypes.func,
-};
+import { useDispatch } from 'react-redux';
+import { updateFilter } from './filtersSlice';
 
 const useStyles = makeStyles({
     root: { padding: '20px', borderTop: `1px solid ${GRAY_COLOR}` },
@@ -18,12 +14,13 @@ const useStyles = makeStyles({
 
 function FilterByService(props) {
     const classes = useStyles();
-    const { onChange, filters } = props;
 
+    // Handle control
+    const dispatch = useDispatch();
     const handleChange = (e) => {
-        const { value, checked } = e.target;
-        if (onChange) onChange({ [value]: checked });
+        return { [e.target.value]: e.target.checked };
     };
+    const action = (e) => updateFilter(handleChange(e));
 
     return (
         <Box className={classes.root}>
@@ -33,16 +30,14 @@ function FilterByService(props) {
             <Box className={classes.range}>
                 <FormGroup>
                     <FormControlLabel
-                        control={<Checkbox onChange={handleChange} />}
+                        control={<Checkbox onChange={(e) => dispatch(action(e))} />}
                         label="Khuyến mãi"
                         value="isPromotion"
-                        checked={Boolean(filters.isPromotion)}
                     />
                     <FormControlLabel
-                        control={<Checkbox onChange={handleChange} />}
+                        control={<Checkbox onChange={(e) => dispatch(action(e))} />}
                         label="FREESHIP"
                         value="isFreeShip"
-                        checked={Boolean(filters.isFreeShip)}
                     />
                 </FormGroup>
             </Box>

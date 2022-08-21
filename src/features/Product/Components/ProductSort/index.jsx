@@ -1,20 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Box, Tab, Tabs } from '@mui/material';
-
-ProductSort.propTypes = {
-    currentSort: PropTypes.string,
-    onChange: PropTypes.func,
-};
+import { useDispatch, useSelector } from 'react-redux';
+import { updateFilter } from '../Filter/filtersSlice';
 
 function ProductSort(props) {
-    const { onChange, currentSort } = props;
-    const handleChange = (e, value) => {
-        if (onChange) onChange(value);
-    };
+    // Handle control
+    const filters = useSelector((state) => state.filters.current);
+    const dispatch = useDispatch();
+    const handleChange = (e, value) => ({ _sort: value });
+    const action = (e, value) => updateFilter(handleChange(e, value));
+
     return (
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs onChange={handleChange} value={currentSort}>
+            <Tabs onChange={(e, value) => dispatch(action(e, value))} value={filters._sort}>
                 <Tab label="GIÁ THẤP ⟶ CAO" value="salePrice:ASC"></Tab>
                 <Tab label="Từ CAO ⟶ THẤP" value="salePrice:DESC" />
             </Tabs>

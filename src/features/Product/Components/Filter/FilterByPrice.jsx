@@ -1,16 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
 
-import PropTypes from 'prop-types';
 import { Box } from '@mui/system';
 import { Button, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { GRAY_COLOR } from 'constants/index';
 import NumberFormat from 'react-number-format';
-
-FilterByPrice.propTypes = {
-    onChange: PropTypes.func,
-};
+import { useDispatch, useSelector } from 'react-redux';
+import { updateFilter } from './filtersSlice';
 
 const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, ref) {
     const { onChange, ...other } = props;
@@ -39,15 +36,15 @@ const useStyles = makeStyles({
     range: { display: 'flex', margin: '20px 0', '& > span': { margin: '0 20px' } },
 });
 
-function FilterByPrice({ onChange }) {
+function FilterByPrice(props) {
     const classes = useStyles();
 
+    // Handle textField
     const [values, setValues] = useState({
         salePrice_gte: 0,
         salePrice_lte: 0,
     });
-
-    const handleChange = (e) => {
+    const handlePriceChange = (e) => {
         const { value, name } = e.target;
         setValues((prevValues) => ({
             ...prevValues,
@@ -55,9 +52,13 @@ function FilterByPrice({ onChange }) {
         }));
     };
 
-    const handleSubmit = () => {
-        if (onChange) onChange(values);
-    };
+    // Handle sumbit
+    const dispatch = useDispatch();
+    const filters = useSelector((state) => state.filters.current);
+
+    const handleChange = (e) => values;
+    const action = (e) => updateFilter(handleChange(e));
+
     return (
         <Box className={classes.root}>
             <Typography variant="subtitle2" fontWeight="bold">
@@ -67,8 +68,8 @@ function FilterByPrice({ onChange }) {
                 <TextField
                     variant="standard"
                     name="salePrice_gte"
-                    value={values.salePrice_gte}
-                    onChange={handleChange}
+                    value={filters.salePrice_gte}
+                    onChange={handlePriceChange}
                     InputProps={{
                         inputComponent: NumberFormatCustom,
                     }}
@@ -77,14 +78,14 @@ function FilterByPrice({ onChange }) {
                 <TextField
                     variant="standard"
                     name="salePrice_lte"
-                    value={values.salePrice_lte}
-                    onChange={handleChange}
+                    value={filters.salePrice_lte}
+                    onChange={handlePriceChange}
                     InputProps={{
                         inputComponent: NumberFormatCustom,
                     }}
                 ></TextField>
             </Box>
-            <Button variant="outlined" color="primary" onClick={handleSubmit}>
+            <Button variant="outlined" color="primary" onClick={(e) => dispatch(action(e))}>
                 Áp dụng
             </Button>
         </Box>
