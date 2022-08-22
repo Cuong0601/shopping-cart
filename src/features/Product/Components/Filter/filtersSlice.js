@@ -15,9 +15,20 @@ const filtersSlice = createSlice({
         updateFilter: (state, actions) => {
             state.current = { ...state.current, ...actions.payload };
         },
+        removeFilterCategory: (state) => {
+            const newFilters = { ...state.current };
+            delete newFilters['category.id'];
+            state.current = newFilters;
+        },
+        removeFilterPrice: (state) => {
+            const newFilters = { ...state.current };
+            delete newFilters.salePrice_gte;
+            delete newFilters.salePrice_lte;
+            state.current = newFilters;
+        },
     },
 });
 
 const { actions, reducer } = filtersSlice;
-export const { updateFilter } = actions;
+export const { updateFilter, removeFilterCategory, removeFilterPrice } = actions;
 export default reducer;

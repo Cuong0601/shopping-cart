@@ -4,7 +4,7 @@ import { Box } from '@mui/system';
 import { Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { GRAY_COLOR } from 'constants/index';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateFilter } from './filtersSlice';
 
 const useStyles = makeStyles({
@@ -15,6 +15,7 @@ const useStyles = makeStyles({
 function FilterByService(props) {
     const classes = useStyles();
 
+    const filters = useSelector((state) => state.filters.current);
     // Handle control
     const dispatch = useDispatch();
     const handleChange = (e) => {
@@ -33,11 +34,13 @@ function FilterByService(props) {
                         control={<Checkbox onChange={(e) => dispatch(action(e))} />}
                         label="Khuyến mãi"
                         value="isPromotion"
+                        checked={Boolean(filters.isPromotion)}
                     />
                     <FormControlLabel
                         control={<Checkbox onChange={(e) => dispatch(action(e))} />}
                         label="FREESHIP"
                         value="isFreeShip"
+                        checked={Boolean(filters.isFreeShip)}
                     />
                 </FormGroup>
             </Box>

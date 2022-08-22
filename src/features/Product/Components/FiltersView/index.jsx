@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '@mui/system';
 import { Chip, Stack } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeFilterCategory, removeFilterPrice, updateFilter } from '../Filter/filtersSlice';
+import categoryAPI from 'api/categoryAPI';
 
 FiltersView.propTypes = {
     filters: PropTypes.object,
@@ -13,7 +15,7 @@ FiltersView.propTypes = {
 
 const useStyles = makeStyles({
     root: { marginTop: '10px', marginLeft: '10px' },
-    fixed: { fontWeight: 'bold', padding: 1 },
+    fixed: { fontWeight: 'bold', padding: 1, color: '#1A94FF' },
     unfixed: { padding: 1 },
 });
 
@@ -26,42 +28,79 @@ const theme = createTheme({
     },
 });
 
-// const filters = useSelector((state) => state.filters.current);
-
-const FILTER_FIXED = [
-    {
-        id: 1,
-        name: 'FREESHIP',
-        active: true,
-    },
-];
-const FILTER_UNFIXED = [
-    {
-        id: 1,
-        name: 'Khuyến mãi',
-        //visible: Boolean(filters.isPromotion),
-    },
-    {
-        id: 2,
-        name: 'Từ 0đ đến 0đ',
-        //visible: Boolean(filters.salePrice_gte || filters.salePrice_lte),
-    },
-    {
-        id: 3,
-        name: 'Danh mục',
-        //visible: Boolean(filters['category.id']),
-    },
-];
-
 function FiltersView(props) {
     const classes = useStyles();
-    const handleClick = () => {
-        console.info('You clicked the Chip.');
-    };
 
-    const handleDelete = () => {
-        console.info('You click delete icon.');
-    };
+    const dispatch = useDispatch();
+
+    const filters = useSelector((state) => state.filters.current);
+    // GET categoryList
+    const [categoryList, setCategoryList] = useState([]);
+    useEffect(() => {
+        try {
+            const fetchCategory = async () => {
+                const list = await categoryAPI.getAll();
+                setCategoryList(
+                    list.map((x) => ({
+                        id: x.id,
+                        name: x.name,
+                    }))
+                );
+            };
+            fetchCategory();
+        } catch (error) {
+            console.log('Failed to fetch Category: ', error);
+        }
+    }, []);
+
+    const FILTER_FIXED = [
+        {
+            id: 1,
+            name: 'FREESHIP ✈',
+            active: Boolean(filters.isFreeShip),
+            filter: () => {
+                dispatch(updateFilter({ isFreeShip: !Boolean(filters.isFreeShip) }));
+            },
+        },
+    ];
+    const FILTER_UNFIXED = [
+        {
+            id: 1,
+            name: () => 'Khuyến mãi',
+            visible: Boolean(filters.isPromotion),
+            cancelfilter: () => {
+                dispatch(updateFilter({ isPromotion: false }));
+            },
+        },
+        {
+            id: 2,
+            name: () => `Từ ${filters.salePrice_gte} đến ${filters.salePrice_lte}`,
+            cancelfilter: () => {
+                dispatch(removeFilterPrice());
+            },
+            visible:
+                filters.salePrice_gte === 0
+                    ? true
+                    : Boolean(filters.salePrice_gte) || filters.salePrice_lte === 0
+                    ? true
+                    : Boolean(filters.salePrice_lte),
+        },
+        {
+            id: 3,
+            name: () => {
+                const catetogryID = filters['category.id'];
+                const catetogryName = categoryList.map((x) =>
+                    x.id === catetogryID ? x.name : null
+                );
+                return catetogryName;
+            },
+            cancelfilter: () => {
+                dispatch(removeFilterCategory());
+            },
+            visible: Boolean(filters['category.id']),
+        },
+    ];
+
     return (
         <Box className={classes.root}>
             <Stack direction="row" spacing={1}>
@@ -70,8 +109,8 @@ function FiltersView(props) {
                         <Chip
                             className={classes.fixed}
                             label={x.name}
-                            onClick={handleClick}
-                            color="active"
+                            onClick={() => x.filter()}
+                            color={x.active ? 'active' : 'default'}
                             size="small"
                         />
                     </ThemeProvider>
@@ -82,8 +121,8 @@ function FiltersView(props) {
                             <Chip
                                 className={classes.unfixed}
                                 key={x.id}
-                                label={x.name}
-                                onDelete={handleDelete}
+                                label={x.name()}
+                                onDelete={() => x.cancelfilter()}
                                 size="small"
                             />
                         )
