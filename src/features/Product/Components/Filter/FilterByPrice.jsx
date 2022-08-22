@@ -26,7 +26,6 @@ const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, r
             }}
             thousandSeparator
             isNumericString
-            prefix="$"
         />
     );
 });
@@ -34,6 +33,10 @@ const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, r
 const useStyles = makeStyles({
     root: { padding: '20px', borderTop: `1px solid ${GRAY_COLOR}` },
     range: { display: 'flex', margin: '20px 0', '& > span': { margin: '0 20px' } },
+    smallTextFiledInput: {
+        padding: '3px',
+        fontSize: '14px',
+    },
 });
 
 function FilterByPrice(props) {
@@ -64,22 +67,28 @@ function FilterByPrice(props) {
             </Typography>
             <Box className={classes.range}>
                 <TextField
-                    variant="standard"
+                    variant="outlined"
                     name="salePrice_gte"
                     value={values.salePrice_gte}
                     onChange={handlePriceChange}
                     InputProps={{
                         inputComponent: NumberFormatCustom,
+                        classes: {
+                            input: classes.smallTextFiledInput,
+                        },
                     }}
                 ></TextField>
-                <span>-</span>
+                <Typography sx={{ mx: '5px' }}>-</Typography>
                 <TextField
-                    variant="standard"
+                    variant="outlined"
                     name="salePrice_lte"
                     value={values.salePrice_lte}
                     onChange={handlePriceChange}
                     InputProps={{
                         inputComponent: NumberFormatCustom,
+                        classes: {
+                            input: classes.smallTextFiledInput,
+                        },
                     }}
                 ></TextField>
             </Box>

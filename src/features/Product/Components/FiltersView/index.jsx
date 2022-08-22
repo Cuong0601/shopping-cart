@@ -74,7 +74,17 @@ function FiltersView(props) {
         },
         {
             id: 2,
-            name: () => `Từ ${filters.salePrice_gte} đến ${filters.salePrice_lte}`,
+            name: () => {
+                const salePrice_gte = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                }).format(filters.salePrice_gte);
+                const salePrice_lte = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                }).format(filters.salePrice_lte);
+                return `Từ ${salePrice_gte} đến ${salePrice_lte}`;
+            },
             cancelfilter: () => {
                 dispatch(removeFilterPrice());
             },
