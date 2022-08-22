@@ -4,6 +4,7 @@ import { Box } from '@mui/system';
 import { Chip, Stack } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
 
 FiltersView.propTypes = {
     filters: PropTypes.object,
@@ -25,6 +26,8 @@ const theme = createTheme({
     },
 });
 
+// const filters = useSelector((state) => state.filters.current);
+
 const FILTER_FIXED = [
     {
         id: 1,
@@ -36,17 +39,17 @@ const FILTER_UNFIXED = [
     {
         id: 1,
         name: 'Khuyến mãi',
-        // visible: Boolean(filters.isPromotion),
+        //visible: Boolean(filters.isPromotion),
     },
     {
         id: 2,
         name: 'Từ 0đ đến 0đ',
-        visible: false,
+        //visible: Boolean(filters.salePrice_gte || filters.salePrice_lte),
     },
     {
         id: 3,
         name: 'Danh mục',
-        visible: false,
+        //visible: Boolean(filters['category.id']),
     },
 ];
 

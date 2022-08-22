@@ -6,7 +6,7 @@ import { Button, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { GRAY_COLOR } from 'constants/index';
 import NumberFormat from 'react-number-format';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { updateFilter } from './filtersSlice';
 
 const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, ref) {
@@ -54,8 +54,6 @@ function FilterByPrice(props) {
 
     // Handle sumbit
     const dispatch = useDispatch();
-    const filters = useSelector((state) => state.filters.current);
-
     const handleChange = (e) => values;
     const action = (e) => updateFilter(handleChange(e));
 
@@ -68,7 +66,7 @@ function FilterByPrice(props) {
                 <TextField
                     variant="standard"
                     name="salePrice_gte"
-                    value={filters.salePrice_gte}
+                    value={values.salePrice_gte}
                     onChange={handlePriceChange}
                     InputProps={{
                         inputComponent: NumberFormatCustom,
@@ -78,7 +76,7 @@ function FilterByPrice(props) {
                 <TextField
                     variant="standard"
                     name="salePrice_lte"
-                    value={filters.salePrice_lte}
+                    value={values.salePrice_lte}
                     onChange={handlePriceChange}
                     InputProps={{
                         inputComponent: NumberFormatCustom,
