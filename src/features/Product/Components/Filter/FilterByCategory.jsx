@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useEffect } from 'react';
@@ -6,8 +7,10 @@ import categoryAPI from 'api/categoryAPI';
 import { makeStyles } from '@mui/styles';
 import { GRAY_COLOR } from 'constants/index';
 import ProductSkeletonCategory from '../Skeleton/ProductSkeletonCategory';
-import { useDispatch } from 'react-redux';
-import { updateFilter } from './filtersSlice';
+
+FilterByCategory.propTypes = {
+    onChange: PropTypes.func,
+};
 
 const useStyles = makeStyles({
     root: { padding: 20 },
@@ -48,12 +51,9 @@ function FilterByCategory({ onChange }) {
             console.log('Failed to fetch Category: ', error);
         }
     }, []);
-
-    // Handle control
-    const dispatch = useDispatch();
-    const handleChange = (newCategoryID) => ({ 'category.id': newCategoryID });
-    const action = (newCategoryID) => updateFilter(handleChange(newCategoryID));
-
+    const handleCategoryClick = (category) => {
+        if (onChange) onChange(category.id);
+    };
     return (
         <Box>
             {loading ? (
@@ -65,7 +65,7 @@ function FilterByCategory({ onChange }) {
                     </Typography>
                     <ul className={classes.menu}>
                         {categoryList.map((category) => (
-                            <li key={category.id} onClick={() => dispatch(action(category.id))}>
+                            <li key={category.id} onClick={() => handleCategoryClick(category)}>
                                 <Typography variant="body1"> {category.name}</Typography>
                             </li>
                         ))}
