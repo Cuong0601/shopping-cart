@@ -9,8 +9,10 @@ import ProductList from 'features/Product/Components/ProductList';
 import ProductSort from 'features/Product/Components/ProductSort';
 import ProductFilter from 'features/Product/Components/ProductFilter';
 import FiltersView from 'features/Product/Components/FiltersView';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ProductPagination from 'features/Product/Components/ProductPagination';
+import { useSearchParams } from 'react-router-dom';
+import { updateFilter } from 'features/Product/Components/Filter/filtersSlice';
 
 const useStyles = makeStyles({
     root: {},
@@ -35,21 +37,39 @@ function ProductListPage(props) {
         limit: 12,
     });
 
+    // ( when loadWeb with searchParams) Get searchParams and setFilters = searchParams
+    const dispatch = useDispatch();
     const filters = useSelector((state) => state.filters.current);
+    const [searchParams, setSearchParams] = useSearchParams(filters);
+    useEffect(() => {
+        const filtersQuery = [...searchParams].reduce((previous, current) => {
+            const objKey = current[0];
+            let objValue;
+            if (current[1] === 'true') objValue = true;
+            else if (current[1] === 'false') objValue = false;
+            else if (isNaN(parseInt(current[1]))) objValue = current[1];
+            else objValue = parseInt(current[1]);
 
+            return { ...previous, [objKey]: objValue };
+        }, {});
+        dispatch(updateFilter(filtersQuery));
+    }, [searchParams, dispatch]);
+
+    // If filters change
     useEffect(() => {
         const fectProduct = async () => {
             try {
                 const { data, pagination } = await productAPI.getAll(filters);
                 setProductList(data);
                 setPagination(pagination);
+                setSearchParams(filters); // Set SearchParams for website when filters change
             } catch (error) {
                 console.log('Failed to fetch product list: ', error);
             }
             setLoading(false);
         };
         fectProduct();
-    }, [filters]);
+    }, [filters, setSearchParams]);
 
     return (
         <Box padding={1}>

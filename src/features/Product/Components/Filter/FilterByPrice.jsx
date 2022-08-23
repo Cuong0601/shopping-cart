@@ -6,8 +6,9 @@ import { Button, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { GRAY_COLOR } from 'constants/index';
 import NumberFormat from 'react-number-format';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateFilter } from './filtersSlice';
+import { useEffect } from 'react';
 
 const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, ref) {
     const { onChange, ...other } = props;
@@ -32,7 +33,7 @@ const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, r
 
 const useStyles = makeStyles({
     root: { padding: '20px', borderTop: `1px solid ${GRAY_COLOR}` },
-    range: { display: 'flex', margin: '20px 0', '& > span': { margin: '0 20px' } },
+    range: { display: 'flex', margin: '10px 0', '& > span': { margin: '0 20px' } },
     smallTextFiledInput: {
         padding: '3px',
         fontSize: '14px',
@@ -41,6 +42,16 @@ const useStyles = makeStyles({
 
 function FilterByPrice(props) {
     const classes = useStyles();
+
+    const filters = useSelector((state) => state.filters.current);
+    useEffect(() => {
+        const priceGte = filters.salePrice_gte === undefined ? 0 : filters.salePrice_gte;
+        const priceLte = filters.salePrice_lte === undefined ? 0 : filters.salePrice_lte;
+        setValues({
+            salePrice_gte: priceGte,
+            salePrice_lte: priceLte,
+        });
+    }, [filters.salePrice_gte, filters.salePrice_lte]);
 
     // Handle textField
     const [values, setValues] = useState({
@@ -92,7 +103,12 @@ function FilterByPrice(props) {
                     }}
                 ></TextField>
             </Box>
-            <Button variant="outlined" color="primary" onClick={(e) => dispatch(action(e))}>
+            <Button
+                variant="outlined"
+                color="primary"
+                size="small"
+                onClick={(e) => dispatch(action(e))}
+            >
                 Áp dụng
             </Button>
         </Box>
