@@ -59,7 +59,7 @@ function ProductListPage(props) {
         }));
     };
 
-    const handleSortChange = (e, newValue) => {
+    const handleSortChange = (newValue) => {
         setFilters((prevFilter) => ({
             ...prevFilter,
             _sort: newValue,
