@@ -55,7 +55,22 @@ const FILTER_LIST = [
     },
     {
         id: 3,
-        getLabel: (filters) => `Từ ${filters.salePrice_gte} đến ${filters.salePrice_lte}`,
+        getLabel: (filters) => {
+            let salePrice_gte = new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+            }).format(filters.salePrice_gte);
+
+            let salePrice_lte = new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+            }).format(filters.salePrice_lte);
+
+            if (parseInt(salePrice_gte) > parseInt(salePrice_lte))
+                [salePrice_gte, salePrice_lte] = [salePrice_lte, salePrice_gte];
+
+            return `Từ ${salePrice_gte} đến ${salePrice_lte}`;
+        },
         isActive: (filters) => true,
         isVisible: (filters) =>
             Object.keys(filters).includes('salePrice_lte') &&

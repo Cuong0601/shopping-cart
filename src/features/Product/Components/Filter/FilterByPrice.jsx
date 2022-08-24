@@ -30,7 +30,6 @@ const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(props, r
             }}
             thousandSeparator
             isNumericString
-            prefix="$"
         />
     );
 });
@@ -42,6 +41,8 @@ const useStyles = makeStyles({
 
 function FilterByPrice({ onChange, filters }) {
     const classes = useStyles();
+    const gteInput = React.useRef(null);
+    const lteInput = React.useRef(null);
 
     const [values, setValues] = useState({
         salePrice_gte: 0,
@@ -58,7 +59,12 @@ function FilterByPrice({ onChange, filters }) {
 
     const handleSubmit = () => {
         if (onChange) onChange({ ...filters, ...values });
+        setValues({
+            salePrice_gte: 0,
+            salePrice_lte: 0,
+        });
     };
+
     return (
         <Box className={classes.root}>
             <Typography variant="subtitle2" fontWeight="bold">
@@ -73,6 +79,7 @@ function FilterByPrice({ onChange, filters }) {
                     InputProps={{
                         inputComponent: NumberFormatCustom,
                     }}
+                    inputRef={gteInput}
                 ></TextField>
                 <span>-</span>
                 <TextField
@@ -83,6 +90,7 @@ function FilterByPrice({ onChange, filters }) {
                     InputProps={{
                         inputComponent: NumberFormatCustom,
                     }}
+                    inputRef={lteInput}
                 ></TextField>
             </Box>
             <Button variant="outlined" color="primary" onClick={handleSubmit}>
