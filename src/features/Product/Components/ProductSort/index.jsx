@@ -4,11 +4,11 @@ import { Box, Tab, Tabs } from '@mui/material';
 
 ProductSort.propTypes = {
     onChange: PropTypes.func,
+    filters: PropTypes.object,
 };
 
-function ProductSort(props) {
-    const { onChange } = props;
-    const [value, setValue] = useState('salePrice:ASC');
+function ProductSort({ onChange, filters }) {
+    const [value, setValue] = useState(filters._sort);
 
     const handleChange = (e, value) => {
         setValue(value);

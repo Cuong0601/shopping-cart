@@ -88,6 +88,7 @@ const FILTER_LIST = [
         id: 4,
         getLabel: (filters, categoryList) => {
             const id = filters['category.id'] - 1;
+            if (categoryList.length === 0) return;
             return categoryList[id].name;
         },
         isActive: (filters) => true,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Container } from '@mui/system';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Pagination, Paper } from '@mui/material';
@@ -9,6 +9,7 @@ import ProductList from 'features/Product/Components/ProductList';
 import ProductSort from 'features/Product/Components/ProductSort';
 import ProductFilter from 'features/Product/Components/ProductFilter';
 import FiltersView from 'features/Product/Components/FiltersView';
+import { useSearchParams } from 'react-router-dom';
 
 const useStyles = makeStyles({
     root: {},
@@ -22,6 +23,21 @@ const useStyles = makeStyles({
     },
 });
 
+// Not use queryString.parse()
+const QueryStringParse = (array) => {
+    const query = [...array].reduce((previous, current) => {
+        const objKey = current[0];
+        let objValue;
+        if (current[1] === 'true') objValue = true;
+        else if (current[1] === 'false') objValue = false;
+        else if (isNaN(parseInt(current[1]))) objValue = current[1];
+        else objValue = parseInt(current[1]);
+
+        return { ...previous, [objKey]: objValue };
+    }, {});
+    return query;
+};
+
 function ProductListPage(props) {
     const classes = useStyles();
     const [productList, setProductList] = useState([]);
@@ -32,16 +48,21 @@ function ProductListPage(props) {
         total: 12,
         limit: 12,
     });
-    const [filters, setFilters] = useState({
+    const [filters] = useState({
         _page: 1,
         _limit: 12,
         _sort: 'salePrice:ASC',
     });
 
+    const [searchParams, setSearchParams] = useSearchParams(filters);
+    // when searchParams change - get queryParams
+    const queryParams = useMemo(() => QueryStringParse([...searchParams]), [searchParams]);
+
+    // Call API when queryParams change
     useEffect(() => {
         const fectProduct = async () => {
             try {
-                const { data, pagination } = await productAPI.getAll(filters);
+                const { data, pagination } = await productAPI.getAll(queryParams);
                 setProductList(data);
                 setPagination(pagination);
             } catch (error) {
@@ -50,24 +71,26 @@ function ProductListPage(props) {
             setLoading(false);
         };
         fectProduct();
-    }, [filters]);
+    }, [queryParams]);
 
     const handlePaginationChange = (e, page) => {
-        setFilters((prevFilter) => ({
-            ...prevFilter,
+        const filters = {
+            ...queryParams,
             _page: page,
-        }));
+        };
+        setSearchParams(filters);
     };
 
     const handleSortChange = (newValue) => {
-        setFilters((prevFilter) => ({
-            ...prevFilter,
+        const filters = {
+            ...queryParams,
             _sort: newValue,
-        }));
+        };
+        setSearchParams(filters);
     };
 
     const handleFiltersChange = (newFilters) => {
-        setFilters({ ...newFilters });
+        setSearchParams(newFilters);
     };
 
     return (
@@ -76,14 +99,14 @@ function ProductListPage(props) {
                 <Grid container spacing={1}>
                     <Grid className={classes.left}>
                         <Paper elevation={0}>
-                            <ProductFilter filters={filters} onChange={handleFiltersChange} />
+                            <ProductFilter filters={queryParams} onChange={handleFiltersChange} />
                         </Paper>
                     </Grid>
                     <Grid className={classes.right}>
                         <Paper elevation={0}>
-                            <ProductSort onChange={handleSortChange} />
+                            <ProductSort filters={queryParams} onChange={handleSortChange} />
 
-                            <FiltersView filters={filters} onChange={handleFiltersChange} />
+                            <FiltersView filters={queryParams} onChange={handleFiltersChange} />
 
                             {loading ? (
                                 <ProductSkeletonList length={12} />
