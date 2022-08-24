@@ -22,7 +22,11 @@ function FilterByService(props) {
 
     const handleChange = (e) => {
         const { value, checked } = e.target;
-        if (onChange) onChange({ [value]: checked });
+        if (onChange) {
+            const newFilters = { ...filters };
+            newFilters[value] = checked;
+            onChange(newFilters);
+        }
     };
 
     return (

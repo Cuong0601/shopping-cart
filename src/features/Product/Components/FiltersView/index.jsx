@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '@mui/system';
 import { Chip, Stack } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import categoryAPI from 'api/categoryAPI';
 
 FiltersView.propTypes = {
     filters: PropTypes.object,
@@ -25,66 +26,120 @@ const theme = createTheme({
     },
 });
 
-const FILTER_FIXED = [
+const FILTER_LIST = [
     {
         id: 1,
-        name: 'FREESHIP',
-        active: true,
-    },
-];
-const FILTER_UNFIXED = [
-    {
-        id: 1,
-        name: 'Khuyến mãi',
-        // visible: Boolean(filters.isPromotion),
+        getLabel: (filters) => 'FREESHIP ✈',
+        isActive: (filters) => filters.isFreeShip,
+        isVisible: (filters) => true,
+        isRemovable: false,
+        onRemove: (filters) => {},
+        onToggle: (filters) => {
+            const newFilters = { ...filters };
+            newFilters.isFreeShip = !filters.isFreeShip;
+            return newFilters;
+        },
     },
     {
         id: 2,
-        name: 'Từ 0đ đến 0đ',
-        visible: false,
+        getLabel: () => 'Khuyến mãi',
+        isActive: () => true,
+        isVisible: (filters) => filters.isPromotion,
+        isRemovable: true,
+        onRemove: (filters) => {
+            const newFilters = { ...filters };
+            newFilters.isPromotion = false;
+            return newFilters;
+        },
+        onToggle: () => {},
     },
     {
         id: 3,
-        name: 'Danh mục',
-        visible: false,
+        getLabel: (filters) => `Từ ${filters.salePrice_gte} đến ${filters.salePrice_lte}`,
+        isActive: (filters) => true,
+        isVisible: (filters) =>
+            Object.keys(filters).includes('salePrice_lte') &&
+            Object.keys(filters).includes('salePrice_gte'),
+        isRemovable: true,
+        onRemove: (filters) => {
+            const newFilters = { ...filters };
+            delete newFilters.salePrice_gte;
+            delete newFilters.salePrice_lte;
+            return newFilters;
+        },
+        onToggle: () => {},
+    },
+    {
+        id: 4,
+        getLabel: (filters, categoryList) => {
+            const id = filters['category.id'] - 1;
+            return categoryList[id].name;
+        },
+        isActive: (filters) => true,
+        isVisible: (filters) => Object.keys(filters).includes('category.id'),
+        isRemovable: true,
+        onRemove: (filters) => {
+            const newFilters = { ...filters };
+            delete newFilters['category.id'];
+            return newFilters;
+        },
+        onToggle: () => {},
     },
 ];
 
-function FiltersView(props) {
+function FiltersView({ filters, onChange }) {
     const classes = useStyles();
-    const handleClick = () => {
-        console.info('You clicked the Chip.');
-    };
 
-    const handleDelete = () => {
-        console.info('You click delete icon.');
-    };
+    const [categoryList, setCategoryList] = useState([]);
+    useEffect(() => {
+        try {
+            const fetchCategory = async () => {
+                const list = await categoryAPI.getAll();
+                setCategoryList(
+                    list.map((x) => ({
+                        id: x.id,
+                        name: x.name,
+                    }))
+                );
+            };
+            fetchCategory();
+        } catch (error) {
+            console.log('Failed to fetch Category: ', error);
+        }
+    }, []);
+
     return (
         <Box className={classes.root}>
             <Stack direction="row" spacing={1}>
-                {FILTER_FIXED.map((x) => (
+                {FILTER_LIST.filter((x) => x.isVisible(filters)).map((x) => (
                     <ThemeProvider key={x.id} theme={theme}>
                         <Chip
                             className={classes.fixed}
-                            label={x.name}
-                            onClick={handleClick}
-                            color="active"
+                            label={x.getLabel(filters, categoryList)}
+                            color={x.isActive(filters) ? 'active' : 'default'}
+                            clickable={!x.isRemovable}
+                            onClick={
+                                x.isRemovable
+                                    ? null
+                                    : () => {
+                                          if (!onChange) return;
+                                          const newFilters = x.onToggle(filters);
+                                          onChange(newFilters);
+                                      }
+                            }
+                            onDelete={
+                                x.isRemovable
+                                    ? () => {
+                                          if (!onChange) return;
+                                          const newFilters = x.onRemove(filters);
+                                          onChange(newFilters);
+                                      }
+                                    : null
+                            }
                             size="small"
                         />
                     </ThemeProvider>
                 ))}
-                {FILTER_UNFIXED.map(
-                    (x) =>
-                        x.visible && (
-                            <Chip
-                                className={classes.unfixed}
-                                key={x.id}
-                                label={x.name}
-                                onDelete={handleDelete}
-                                size="small"
-                            />
-                        )
-                )}
             </Stack>
         </Box>
     );

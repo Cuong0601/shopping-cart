@@ -59,7 +59,7 @@ function ProductListPage(props) {
         }));
     };
 
-    const handleSortChange = (newValue) => {
+    const handleSortChange = (e, newValue) => {
         setFilters((prevFilter) => ({
             ...prevFilter,
             _sort: newValue,
@@ -67,10 +67,7 @@ function ProductListPage(props) {
     };
 
     const handleFiltersChange = (newFilters) => {
-        setFilters((prevFilter) => ({
-            ...prevFilter,
-            ...newFilters,
-        }));
+        setFilters({ ...newFilters });
     };
 
     return (
@@ -84,7 +81,7 @@ function ProductListPage(props) {
                     </Grid>
                     <Grid className={classes.right}>
                         <Paper elevation={0}>
-                            <ProductSort currentSort={filters._sort} onChange={handleSortChange} />
+                            <ProductSort onChange={handleSortChange} />
 
                             <FiltersView filters={filters} onChange={handleFiltersChange} />
 

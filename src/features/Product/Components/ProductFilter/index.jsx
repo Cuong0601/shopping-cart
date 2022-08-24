@@ -13,20 +13,14 @@ ProductFilter.propTypes = {
 function ProductFilter(props) {
     const { onChange, filters } = props;
 
-    const handleCategoryChange = (newCategoryID) => {
-        if (!onChange) return;
-        const newFilters = { 'category.id': newCategoryID };
-        onChange(newFilters);
-    };
-
-    const handleChange = (newPrice) => {
-        if (onChange) onChange(newPrice);
+    const handleChange = (newFilters) => {
+        if (onChange) onChange(newFilters);
     };
 
     return (
         <Box>
-            <FilterByCategory onChange={handleCategoryChange} />
-            <FilterByPrice onChange={handleChange} />
+            <FilterByCategory filters={filters} onChange={handleChange} />
+            <FilterByPrice filters={filters} onChange={handleChange} />
             <FilterByService filters={filters} onChange={handleChange} />
         </Box>
     );

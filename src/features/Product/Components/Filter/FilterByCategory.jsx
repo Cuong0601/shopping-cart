@@ -10,6 +10,7 @@ import ProductSkeletonCategory from '../Skeleton/ProductSkeletonCategory';
 
 FilterByCategory.propTypes = {
     onChange: PropTypes.func,
+    filters: PropTypes.object,
 };
 
 const useStyles = makeStyles({
@@ -30,7 +31,7 @@ const useStyles = makeStyles({
     },
 });
 
-function FilterByCategory({ onChange }) {
+function FilterByCategory({ onChange, filters }) {
     const classes = useStyles();
     const [categoryList, setCategoryList] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -52,7 +53,7 @@ function FilterByCategory({ onChange }) {
         }
     }, []);
     const handleCategoryClick = (category) => {
-        if (onChange) onChange(category.id);
+        if (onChange) onChange({ ...filters, 'category.id': category.id });
     };
     return (
         <Box>

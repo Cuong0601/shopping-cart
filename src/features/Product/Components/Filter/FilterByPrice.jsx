@@ -9,6 +9,7 @@ import { GRAY_COLOR } from 'constants/index';
 import NumberFormat from 'react-number-format';
 
 FilterByPrice.propTypes = {
+    filters: PropTypes.object,
     onChange: PropTypes.func,
 };
 
@@ -39,7 +40,7 @@ const useStyles = makeStyles({
     range: { display: 'flex', margin: '20px 0', '& > span': { margin: '0 20px' } },
 });
 
-function FilterByPrice({ onChange }) {
+function FilterByPrice({ onChange, filters }) {
     const classes = useStyles();
 
     const [values, setValues] = useState({
@@ -56,7 +57,7 @@ function FilterByPrice({ onChange }) {
     };
 
     const handleSubmit = () => {
-        if (onChange) onChange(values);
+        if (onChange) onChange({ ...filters, ...values });
     };
     return (
         <Box className={classes.root}>
