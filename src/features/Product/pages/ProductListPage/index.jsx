@@ -26,14 +26,34 @@ const useStyles = makeStyles({
 // Not use queryString.parse()
 const QueryStringParse = (array) => {
     const query = [...array].reduce((previous, current) => {
+        // check urlParams wrong - if wrong set default
         const objKey = current[0];
-        let objValue;
-        if (current[1] === 'true') objValue = true;
-        else if (current[1] === 'false') objValue = false;
-        else if (isNaN(parseInt(current[1]))) objValue = current[1];
-        else objValue = parseInt(current[1]);
+        if (
+            objKey !== 'category.id' &&
+            'isFreeShip' &&
+            'isPromotion' &&
+            'salePrice_gte' &&
+            'salePrice_lte' &&
+            '_page' &&
+            '_limit' &&
+            '_sort'
+        )
+            return {
+                _page: 1,
+                _limit: 12,
+                _sort: 'salePrice:ASC',
+            };
+        // urlParams true convert to Object
+        else {
+            let objValue;
+            if (current[1] === 'true') objValue = true;
+            else if (current[1] === 'false') objValue = false;
+            else if (isNaN(parseInt(current[1]))) objValue = current[1];
+            else objValue = parseInt(current[1]);
 
-        return { ...previous, [objKey]: objValue };
+            const queryParse = { ...previous, [objKey]: objValue };
+            return queryParse;
+        }
     }, {});
     return query;
 };
