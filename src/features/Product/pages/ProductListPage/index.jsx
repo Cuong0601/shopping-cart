@@ -104,7 +104,10 @@ function ProductListPage(props) {
                     </Grid>
                     <Grid className={classes.right}>
                         <Paper elevation={0}>
-                            <ProductSort filters={queryParams} onChange={handleSortChange} />
+                            <ProductSort
+                                onChange={handleSortChange}
+                                currentSort={queryParams._sort}
+                            />
 
                             <FiltersView filters={queryParams} onChange={handleFiltersChange} />
 
