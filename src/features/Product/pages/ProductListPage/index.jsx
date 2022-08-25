@@ -30,13 +30,13 @@ const QueryStringParse = (array) => {
         const objKey = current[0];
         if (
             objKey !== 'category.id' &&
-            'isFreeShip' &&
-            'isPromotion' &&
-            'salePrice_gte' &&
-            'salePrice_lte' &&
-            '_page' &&
-            '_limit' &&
-            '_sort'
+            objKey !== 'isFreeShip' &&
+            objKey !== 'isPromotion' &&
+            objKey !== 'salePrice_gte' &&
+            objKey !== 'salePrice_lte' &&
+            objKey !== '_page' &&
+            objKey !== '_limit' &&
+            objKey !== '_sort'
         )
             return {
                 _page: 1,
