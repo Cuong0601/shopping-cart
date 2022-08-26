@@ -4,7 +4,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 function TodoFeature(props) {
   return (
     <div>
-      <h1>Đây là ứng dụng todo app</h1>
+      <h1>Đây là ứng dụng todo apps</h1>
       <NavLink to="/todos/detailpage">Detailpage todo</NavLink>
       <br />
       <NavLink to="/todos/listpage">Listpage todo</NavLink>
