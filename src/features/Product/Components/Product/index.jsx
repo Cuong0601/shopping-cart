@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 import { STATIC_HOST, THUMBNAIL_PLACEHOLDER } from 'constants/index';
+import { useNavigate } from 'react-router-dom';
 
 Product.propTypes = {
     product: PropTypes.object,
@@ -15,8 +16,13 @@ function Product({ product }) {
     const thumbNailURL = product.thumbnail
         ? `${STATIC_HOST}${product.thumbnail.url}`
         : THUMBNAIL_PLACEHOLDER;
+
+    const navigate = useNavigate();
+    const handleClick = () => {
+        navigate(`/product/${product.id}`);
+    };
     return (
-        <Box sx={{ px: 1, pb: 1 }} minHeight="198px">
+        <Box sx={{ px: 1, pb: 1 }} minHeight="198px" onClick={handleClick}>
             <Box>
                 <img src={thumbNailURL} alt={product.name} width="100%"></img>
             </Box>

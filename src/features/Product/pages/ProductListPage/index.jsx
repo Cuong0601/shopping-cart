@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     },
 });
 
-// Not use queryString.parse()
+// Not use queryString.parse() - Custom urlParams
 const QueryStringParse = (array) => {
     const query = [...array].reduce((previous, current) => {
         // check urlParams wrong - if wrong set default
@@ -50,9 +50,7 @@ const QueryStringParse = (array) => {
             else if (current[1] === 'false') objValue = false;
             else if (isNaN(parseInt(current[1]))) objValue = current[1];
             else objValue = parseInt(current[1]);
-
-            const queryParse = { ...previous, [objKey]: objValue };
-            return queryParse;
+            return { ...previous, [objKey]: objValue };
         }
     }, {});
     return query;
